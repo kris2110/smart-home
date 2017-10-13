@@ -3,6 +3,9 @@ package ru.sbt.mipt.oop;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 
 public class Application {
 
@@ -12,15 +15,11 @@ public class Application {
         SmartHome smartHome = SmartHomeParser.parse(json);
         // начинаем цикл обработки событий
         SensorEvent event = getNextSensorEvent();
+        Collection<EventProcessor> processors = new ArrayList<>();
         while (event != null) {
             System.out.println("Got event: " + event);
-            if (EventManager.isTurnOnLightEvent(event) || EventManager.isTurnOffLightEvent(event)) {
-                // событие от источника света
-                LightEventProcessor.process(smartHome, event);
-            }
-            if (EventManager.isOpenDoorEvent(event) || EventManager.isCloseDoorEvent(event)) {
-                // событие от двери
-                DoorEventProcessor.process(smartHome, event);
+            for (EventProcessor processor : processors) {
+                processor.processEvent(smartHome, event);
             }
             event = getNextSensorEvent();
         }
