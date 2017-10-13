@@ -10,9 +10,7 @@ import java.util.Collections;
 public class Application {
 
     public static void main(String... args) throws IOException {
-        // считываем состояние дома из файла
-        String json = new String(Files.readAllBytes(Paths.get("smart-home-1.js")));
-        SmartHome smartHome = SmartHomeParser.parse(json);
+        SmartHome smartHome = SmartHomeFileReader.read();
         // начинаем цикл обработки событий
         SensorEvent event = getNextSensorEvent();
         Collection<EventProcessor> processors = new ArrayList<>();
