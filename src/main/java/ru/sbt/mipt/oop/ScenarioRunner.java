@@ -24,10 +24,10 @@ public class ScenarioRunner implements EventProcessor {
                             }
                         }
                     }
+                    System.out.println("All lights were turned off.");
                 }
             }
         }
-        System.out.println("All lights were turned off.");
     }
 
     private boolean isDoorClosedEvent(SensorEvent event) {
