@@ -42,7 +42,7 @@ public class DoorEventProcessorTest {
 
         SensorEvent event = new SensorEvent(SensorEventType.DOOR_CLOSED, closedDoorId);
         DoorEventProcessor processor = new DoorEventProcessor();
-        processor.processEvent(smartHome, event);
+        processor.handle(smartHome, event);
 
         for (Room room : rooms) {
             for (Door door : room.getDoors()) {
@@ -90,7 +90,7 @@ public class DoorEventProcessorTest {
 
         SensorEvent event = new SensorEvent(SensorEventType.DOOR_OPEN, openedDoorId);
         DoorEventProcessor processor = new DoorEventProcessor();
-        processor.processEvent(smartHome, event);
+        processor.handle(smartHome, event);
 
         for (Room room : rooms) {
             for (Door door : room.getDoors()) {
@@ -138,7 +138,7 @@ public class DoorEventProcessorTest {
 
         SensorEvent event = new SensorEvent(SensorEventType.DOOR_OPEN, openedDoorId);
         DoorEventProcessor processor = new DoorEventProcessor();
-        processor.processEvent(smartHome, event);
+        processor.handle(smartHome, event);
 
         for (Room room : rooms) {
             for (Door door : room.getDoors()) {
@@ -182,7 +182,7 @@ public class DoorEventProcessorTest {
 
         SensorEvent event = new SensorEvent(SensorEventType.LIGHT_ON, turnedOnLightId);
         DoorEventProcessor processor = new DoorEventProcessor();
-        processor.processEvent(smartHome, event);
+        processor.handle(smartHome, event);
 
         for (Room room : rooms) {
             for (Door door : room.getDoors()) {

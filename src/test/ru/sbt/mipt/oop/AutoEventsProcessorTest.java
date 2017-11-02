@@ -3,13 +3,12 @@ package ru.sbt.mipt.oop;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class ScenarioRunnerTest {
+public class AutoEventsProcessorTest {
     //Close a hall door (one room, one door, one light).
     //Initial state: all lights are on
     //Desired ultimate state: all lights are off
@@ -25,8 +24,8 @@ public class ScenarioRunnerTest {
         smartHome.addRoom(hall);
         SensorEvent event = new SensorEvent(SensorEventType.DOOR_CLOSED, hallDoorId);
 
-        ScenarioRunner scenarioRunner = new ScenarioRunner();
-        scenarioRunner.processEvent(smartHome, event);
+        AutoEventsProcessor autoEventsProcessor = new AutoEventsProcessor();
+        autoEventsProcessor.handle(smartHome, event);
 
         assertFalse(light.isOn());
     }
@@ -66,8 +65,8 @@ public class ScenarioRunnerTest {
 
         SensorEvent event = new SensorEvent(SensorEventType.DOOR_CLOSED, hallDoorId);
 
-        ScenarioRunner scenarioRunner = new ScenarioRunner();
-        scenarioRunner.processEvent(smartHome, event);
+        AutoEventsProcessor autoEventsProcessor = new AutoEventsProcessor();
+        autoEventsProcessor.handle(smartHome, event);
 
         for (Room room : rooms) {
             for (Light light : room.getLights()) {
@@ -111,8 +110,8 @@ public class ScenarioRunnerTest {
 
         SensorEvent event = new SensorEvent(SensorEventType.DOOR_CLOSED, "0");
 
-        ScenarioRunner scenarioRunner = new ScenarioRunner();
-        scenarioRunner.processEvent(smartHome, event);
+        AutoEventsProcessor autoEventsProcessor = new AutoEventsProcessor();
+        autoEventsProcessor.handle(smartHome, event);
 
         for (Room room : rooms) {
             for (Light light : room.getLights()) {
@@ -121,7 +120,7 @@ public class ScenarioRunnerTest {
         }
 
         event = new SensorEvent(SensorEventType.DOOR_CLOSED, "Room #1");
-        scenarioRunner.processEvent(smartHome, event);
+        autoEventsProcessor.handle(smartHome, event);
 
         for (Room room : rooms) {
             for (Light light : room.getLights()) {
@@ -130,7 +129,7 @@ public class ScenarioRunnerTest {
         }
 
         event = new SensorEvent(SensorEventType.DOOR_CLOSED, "Room #4");
-        scenarioRunner.processEvent(smartHome, event);
+        autoEventsProcessor.handle(smartHome, event);
 
         for (Room room : rooms) {
             for (Light light : room.getLights()) {
@@ -174,8 +173,8 @@ public class ScenarioRunnerTest {
 
         SensorEvent event = new SensorEvent(SensorEventType.LIGHT_OFF, "1");
 
-        ScenarioRunner scenarioRunner = new ScenarioRunner();
-        scenarioRunner.processEvent(smartHome, event);
+        AutoEventsProcessor autoEventsProcessor = new AutoEventsProcessor();
+        autoEventsProcessor.handle(smartHome, event);
 
         for (Room room : rooms) {
             for (Light light : room.getLights()) {
@@ -220,8 +219,8 @@ public class ScenarioRunnerTest {
 
         SensorEvent event = new SensorEvent(SensorEventType.DOOR_OPEN, hallDoorId);
 
-        ScenarioRunner scenarioRunner = new ScenarioRunner();
-        scenarioRunner.processEvent(smartHome, event);
+        AutoEventsProcessor autoEventsProcessor = new AutoEventsProcessor();
+        autoEventsProcessor.handle(smartHome, event);
 
         for (Room room : rooms) {
             for (Light light : room.getLights()) {
