@@ -1,5 +1,7 @@
 package ru.sbt.mipt.oop;
 
+import java.util.List;
+
 import static ru.sbt.mipt.oop.SensorEventType.DOOR_CLOSED;
 
 public class AutoEventsProcessor implements EventHandler {
@@ -40,6 +42,15 @@ public class AutoEventsProcessor implements EventHandler {
             }
         }
         System.out.println("All lights were turned off.");
+    }
+
+    private void turnOfHomeLights(SmartHome smartHome) {
+        smartHome.executeAction(object -> {
+            if (object instanceof Light) {
+                Light light = (Light) object;
+                light.setOn(false);
+            }
+        });
     }
 
     private boolean isDoorClosedEvent(SensorEvent event) {
