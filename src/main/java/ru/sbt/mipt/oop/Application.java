@@ -3,6 +3,8 @@ package ru.sbt.mipt.oop;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Application {
 
@@ -15,12 +17,14 @@ public class Application {
     }
 
     private static void configureHandlers(SensorEventObserver sensorEventObserver) {
+        List<EventHandler> handlers = new ArrayList<>();
+        sensorEventObserver.setHandlers(handlers);
         sensorEventObserver.addHandler(new LightEventProcessor());
         sensorEventObserver.addHandler(new DoorEventProcessor());
         sensorEventObserver.addHandler(new AutoEventsProcessor());
     }
 
-    private static void sendCommand(SensorCommand command) {
+    static void sendCommand(SensorCommand command) {
         System.out.println("Pretent we're sending command " + command);
     }
 
