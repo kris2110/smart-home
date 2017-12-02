@@ -1,15 +1,17 @@
 package ru.sbt.mipt.oop;
 
-public class AlarmSystemStateOn implements AlarmSystemState {
+import com.sun.org.apache.regexp.internal.RE;
+
+public class AlarmSystemStateAlarm implements AlarmSystemState {
     private final AlarmSystem alarmSystem;
 
-    public AlarmSystemStateOn(AlarmSystem system) {
+    public AlarmSystemStateAlarm(AlarmSystem system) {
         alarmSystem = system;
     }
 
     @Override
     public AlarmSystemStateEnum getState() {
-        return AlarmSystemStateEnum.ON;
+        return AlarmSystemStateEnum.ALARM;
     }
 
     @Override
@@ -18,15 +20,17 @@ public class AlarmSystemStateOn implements AlarmSystemState {
 
     @Override
     public void turnOff() {
-        alarmSystem.setAlarmSystemState(new AlarmSystemStateOff(alarmSystem));
     }
 
     @Override
     public void onSensorEvent(SensorEvent sensorEvent) {
-        alarmSystem.setAlarmSystemState(new AlarmSystemStateWaitForPassword(alarmSystem));
+        return;
     }
 
     @Override
     public void enterPassword(String password) {
+        if (alarmSystem.isPasswordCorrect(password)) {
+            alarmSystem.setAlarmSystemState(new AlarmSystemStateOn(alarmSystem));
+        }
     }
 }

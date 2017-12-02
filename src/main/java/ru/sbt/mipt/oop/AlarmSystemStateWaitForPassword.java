@@ -4,8 +4,7 @@ public class AlarmSystemStateWaitForPassword implements AlarmSystemState {
     private final AlarmSystem alarmSystem;
 
     public AlarmSystemStateWaitForPassword(AlarmSystem system) {
-        alarmSystem =system;
-
+        alarmSystem = system;
     }
 
     @Override
@@ -15,11 +14,22 @@ public class AlarmSystemStateWaitForPassword implements AlarmSystemState {
 
     @Override
     public void turnOn() {
-        return;
     }
 
     @Override
-    public void onEvent(SensorEvent sensorEvent) {
-        return;
+    public void turnOff() {
+    }
+
+    @Override
+    public void onSensorEvent(SensorEvent sensorEvent) {
+    }
+
+    @Override
+    public void enterPassword(String password) {
+        if (alarmSystem.isPasswordCorrect(password)) {
+            alarmSystem.setAlarmSystemState(new AlarmSystemStateOn(alarmSystem));
+        } else {
+            alarmSystem.setAlarmSystemState(new AlarmSystemStateAlarm(alarmSystem));
+        }
     }
 }

@@ -4,8 +4,7 @@ public class AlarmSystemStateOff implements AlarmSystemState {
     private final AlarmSystem alarmSystem;
 
     public AlarmSystemStateOff(AlarmSystem system) {
-        alarmSystem =system;
-
+        alarmSystem = system;
     }
 
     @Override
@@ -19,7 +18,14 @@ public class AlarmSystemStateOff implements AlarmSystemState {
     }
 
     @Override
-    public void onEvent(SensorEvent sensorEvent) {
-        return;
+    public void turnOff() {
+    }
+
+    @Override
+    public void onSensorEvent(SensorEvent sensorEvent) {
+    }
+
+    @Override
+    public void enterPassword(String password) {
     }
 }

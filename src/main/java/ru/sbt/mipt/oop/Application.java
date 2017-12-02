@@ -1,6 +1,7 @@
 package ru.sbt.mipt.oop;
 
 import org.jetbrains.annotations.Nullable;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -9,10 +10,8 @@ import java.util.List;
 public class Application {
 
     public static void main(String... args) throws IOException {
-        SmartHome smartHome = SmartHomeFileReader.read();
-        // начинаем цикл обработки событий
-        SensorEventObserver sensorEventObserver = new SensorEventObserver(smartHome);
-        configureHandlers(sensorEventObserver);
+        ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext("application.xml");
+        SensorEventObserver sensorEventObserver = (SensorEventObserver) ctx.getBean("sensorEventObserver");
         sensorEventObserver.runEventCycle();
     }
 
