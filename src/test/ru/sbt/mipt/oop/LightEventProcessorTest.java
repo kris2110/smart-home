@@ -3,191 +3,37 @@ package ru.sbt.mipt.oop;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 
 import static org.junit.Assert.*;
 
 public class LightEventProcessorTest {
-    //Turn off a light.
-    //Initial state: all lights are on
-    //Desired ultimate state: all lights are on except one
     @Test
-    public void testTurnOffLight() {
+    public void testHandleLightOn() {
+        LightEventProcessor lightEventProcessor = new LightEventProcessor();
         SmartHome smartHome = new SmartHome();
-        ArrayList<Light> lights = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            lights.add(new Light(String.valueOf(i + 1), true));
-        }
+        Light light = new Light("1", false);
+        smartHome.addRoom(new Room(Arrays.asList(light), Collections.emptyList(), "room"));
+        SensorEvent event = new SensorEvent(SensorEventType.LIGHT_ON, light.getId());
 
-        ArrayList<Door> doors = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
-            doors.add(new Door(true, String.valueOf(i + 1)));
-        }
-
-        ArrayList<Room> rooms = new ArrayList<>();
-        for (int i = 0; i < 8; i++) {
-            rooms.add(new Room(lights, doors, "Room #" + String.valueOf(i + 1)));
-        }
-
-        for (Room room : rooms) {
-            for (Light light : room.getLights()) {
-                assertTrue(light.isOn());
-            }
-        }
-
-        for (Room room : rooms) {
-            smartHome.addRoom(room);
-        }
-
-        String turnedOffLightId = "2";
-
-        SensorEvent event = new SensorEvent(SensorEventType.LIGHT_OFF, turnedOffLightId);
-        LightEventProcessor processor = new LightEventProcessor();
-        processor.handle(smartHome, event);
-
-        for (Room room : rooms) {
-            for (Light light : room.getLights()) {
-                if (light.getId().equals(turnedOffLightId)) {
-                    assertFalse(light.isOn());
-                } else {
-                    assertTrue(light.isOn());
-                }
-            }
-        }
+        assertFalse(light.isOn());
+        lightEventProcessor.handle(smartHome, event);
+        assertTrue(light.isOn());
     }
 
-    //Turn on a light.
-    //Initial state: all lights are off
-    //Desired ultimate state: all lights are off except one
     @Test
-    public void testTurnOnLight() {
+    public void testHandleLightOff() {
+        LightEventProcessor lightEventProcessor = new LightEventProcessor();
         SmartHome smartHome = new SmartHome();
-        ArrayList<Light> lights = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            lights.add(new Light(String.valueOf(i + 1), false));
-        }
+        Light light = new Light("1", true);
+        smartHome.addRoom(new Room(Arrays.asList(light),
+                Collections.emptyList(),
+                "room"));
+        SensorEvent event = new SensorEvent(SensorEventType.LIGHT_OFF, light.getId());
 
-        ArrayList<Door> doors = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
-            doors.add(new Door(true, String.valueOf(i + 1)));
-        }
-
-        ArrayList<Room> rooms = new ArrayList<>();
-        for (int i = 0; i < 8; i++) {
-            rooms.add(new Room(lights, doors, "Room #" + String.valueOf(i + 1)));
-        }
-
-        for (Room room : rooms) {
-            for (Light light : room.getLights()) {
-                assertFalse(light.isOn());
-            }
-        }
-
-        for (Room room : rooms) {
-            smartHome.addRoom(room);
-        }
-
-        String turnedOnLightId = "2";
-
-        SensorEvent event = new SensorEvent(SensorEventType.LIGHT_ON, turnedOnLightId);
-        LightEventProcessor processor = new LightEventProcessor();
-        processor.handle(smartHome, event);
-
-        for (Room room : rooms) {
-            for (Light light : room.getLights()) {
-                if (light.getId().equals(turnedOnLightId)) {
-                    assertTrue(light.isOn());
-                } else {
-                    assertFalse(light.isOn());
-                }
-            }
-        }
-    }
-
-    //Turn on a not existed light.
-    //Initial state: all lights are off
-    //Desired ultimate state: all lights are off
-    @Test
-    public void testTurnOnNotExistedLight() {
-        SmartHome smartHome = new SmartHome();
-        ArrayList<Light> lights = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            lights.add(new Light(String.valueOf(i + 1), false));
-        }
-
-        ArrayList<Door> doors = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
-            doors.add(new Door(true, String.valueOf(i + 1)));
-        }
-
-        ArrayList<Room> rooms = new ArrayList<>();
-        for (int i = 0; i < 8; i++) {
-            rooms.add(new Room(lights, doors, "Room #" + String.valueOf(i + 1)));
-        }
-
-        for (Room room : rooms) {
-            for (Light light : room.getLights()) {
-                assertFalse(light.isOn());
-            }
-        }
-
-        for (Room room : rooms) {
-            smartHome.addRoom(room);
-        }
-
-        String turnedOnLightId = "0";
-
-        SensorEvent event = new SensorEvent(SensorEventType.LIGHT_ON, turnedOnLightId);
-        LightEventProcessor processor = new LightEventProcessor();
-        processor.handle(smartHome, event);
-
-        for (Room room : rooms) {
-            for (Light light : room.getLights()) {
-                assertFalse(light.isOn());
-            }
-        }
-    }
-
-    //Open a door.
-    //Initial state: all lights are off
-    //Desired ultimate state: all lights are off
-    @Test
-    public void testCloseDoor() {
-        SmartHome smartHome = new SmartHome();
-        ArrayList<Light> lights = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            lights.add(new Light(String.valueOf(i + 1), false));
-        }
-
-        ArrayList<Door> doors = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
-            doors.add(new Door(true, String.valueOf(i + 1)));
-        }
-
-        ArrayList<Room> rooms = new ArrayList<>();
-        for (int i = 0; i < 8; i++) {
-            rooms.add(new Room(lights, doors, "Room #" + String.valueOf(i + 1)));
-        }
-
-        for (Room room : rooms) {
-            for (Light light : room.getLights()) {
-                assertFalse(light.isOn());
-            }
-        }
-
-        for (Room room : rooms) {
-            smartHome.addRoom(room);
-        }
-
-        String openedDoor = "3";
-
-        SensorEvent event = new SensorEvent(SensorEventType.DOOR_OPEN, openedDoor);
-        LightEventProcessor processor = new LightEventProcessor();
-        processor.handle(smartHome, event);
-
-        for (Room room : rooms) {
-            for (Light light : room.getLights()) {
-                assertFalse(light.isOn());
-            }
-        }
+        assertTrue(light.isOn());
+        lightEventProcessor.handle(smartHome, event);
+        assertFalse(light.isOn());
     }
 }

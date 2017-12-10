@@ -5,102 +5,45 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 public class AlarmSystemTest {
-    SensorEvent event = new SensorEvent(SensorEventType.DOOR_OPEN, "1");
-
     @Test
-    public void testFromOffState(){
-        AlarmSystem alarmSystem = new AlarmSystem("1234");
-        assertEquals(AlarmSystemStateEnum.OFF, alarmSystem.getState());
-
-        alarmSystem.turnOff();
-        assertEquals(AlarmSystemStateEnum.OFF, alarmSystem.getState());
-
-        alarmSystem.enterPassword("1234");
-        assertEquals(AlarmSystemStateEnum.OFF, alarmSystem.getState());
-
-        alarmSystem.enterPassword("4444");
-        assertEquals(AlarmSystemStateEnum.OFF, alarmSystem.getState());
-
-        alarmSystem.onSensorEvent(event);
-        assertEquals(AlarmSystemStateEnum.OFF, alarmSystem.getState());
-
-        alarmSystem.turnOn();
-        assertEquals(AlarmSystemStateEnum.ON, alarmSystem.getState());
+    public void testNewSystemIsOff(){
+        AlarmSystemState alarmSystemState = new AlarmSystemState(1234);
+        assertEquals(AlarmSystemStateEnum.OFF, alarmSystemState.getState());
     }
 
     @Test
-    public void testFromOnState(){
-        AlarmSystem alarmSystem = new AlarmSystem("1234");
-        alarmSystem.turnOn();
-        assertEquals(AlarmSystemStateEnum.ON, alarmSystem.getState());
-
-        alarmSystem.turnOn();
-        assertEquals(AlarmSystemStateEnum.ON, alarmSystem.getState());
-
-        alarmSystem.enterPassword("1234");
-        assertEquals(AlarmSystemStateEnum.ON, alarmSystem.getState());
-
-        alarmSystem.enterPassword("4444");
-        assertEquals(AlarmSystemStateEnum.ON, alarmSystem.getState());
-
-        alarmSystem.onSensorEvent(event);
-        assertEquals(AlarmSystemStateEnum.WAIT_FOR_PASSWORD, alarmSystem.getState());
-
-        alarmSystem = new AlarmSystem("1234");
-        alarmSystem.turnOn();
-
-        alarmSystem.turnOff();
-        assertEquals(AlarmSystemStateEnum.OFF, alarmSystem.getState());
+    public void testNewSystemIsOn(){
+        AlarmSystemState alarmSystemState = new AlarmSystemState(1234);
+        alarmSystemState.turnOn();
+        assertEquals(AlarmSystemStateEnum.ON, alarmSystemState.getState());
     }
 
     @Test
-    public void testFromWaitForPasswordState() {
-        AlarmSystem alarmSystem = new AlarmSystem("1234");
-        alarmSystem.turnOn();
-        alarmSystem.onSensorEvent(event);
-        assertEquals(AlarmSystemStateEnum.WAIT_FOR_PASSWORD, alarmSystem.getState());
-
-        alarmSystem.onSensorEvent(event);
-        assertEquals(AlarmSystemStateEnum.WAIT_FOR_PASSWORD, alarmSystem.getState());
-
-        alarmSystem.turnOn();
-        assertEquals(AlarmSystemStateEnum.WAIT_FOR_PASSWORD, alarmSystem.getState());
-
-        alarmSystem.turnOff();
-        assertEquals(AlarmSystemStateEnum.WAIT_FOR_PASSWORD, alarmSystem.getState());
-
-        alarmSystem.enterPassword("1234");
-        assertEquals(AlarmSystemStateEnum.ON, alarmSystem.getState());
-
-        alarmSystem = new AlarmSystem("1234");
-        alarmSystem.turnOn();
-        alarmSystem.onSensorEvent(event);
-
-        alarmSystem.enterPassword("4444");
-        assertEquals(AlarmSystemStateEnum.ALARM, alarmSystem.getState());
+    public void testSensorEventWaitsForPasswordState(){
+        AlarmSystemState alarmSystemState = new AlarmSystemState(1234);
+        alarmSystemState.turnOn();
+        SensorEvent sensorEvent = createSensorEvent();
+        alarmSystemState.onEvent(sensorEvent);
+        assertEquals(AlarmSystemStateEnum.WAIT_FOR_PASSWORD, alarmSystemState.getState());
     }
 
     @Test
-    public void testFromAlarmState() {
-        AlarmSystem alarmSystem = new AlarmSystem("1234");
-        alarmSystem.turnOn();
-        alarmSystem.onSensorEvent(event);
-        alarmSystem.enterPassword("4444");
-        assertEquals(AlarmSystemStateEnum.ALARM, alarmSystem.getState());
+    public void testOnEventWhenSystemIsOff(){
+        AlarmSystemState alarmSystemState = new AlarmSystemState(1234);
+        alarmSystemState.onEvent(createSensorEvent());
+        assertEquals(AlarmSystemStateEnum.OFF, alarmSystemState.getState());
+    }
 
-        alarmSystem.onSensorEvent(event);
-        assertEquals(AlarmSystemStateEnum.ALARM, alarmSystem.getState());
+    @Test
+    public void testTurmOnDoesNothingWhenSystemWaitsForPassword(){
+        AlarmSystemState alarmSystemState1 = new AlarmSystemState(1234);
+        alarmSystemState1.turnOn();
+        alarmSystemState1.onEvent(createSensorEvent());
+        alarmSystemState1.turnOn();
+        assertEquals(AlarmSystemStateEnum.WAIT_FOR_PASSWORD, alarmSystemState1.getState());
+    }
 
-        alarmSystem.turnOn();
-        assertEquals(AlarmSystemStateEnum.ALARM, alarmSystem.getState());
-
-        alarmSystem.turnOff();
-        assertEquals(AlarmSystemStateEnum.ALARM, alarmSystem.getState());
-
-        alarmSystem.enterPassword("4444");
-        assertEquals(AlarmSystemStateEnum.ALARM, alarmSystem.getState());
-
-        alarmSystem.enterPassword("1234");
-        assertEquals(AlarmSystemStateEnum.ON, alarmSystem.getState());
+    public SensorEvent createSensorEvent() {
+        return new SensorEvent(SensorEventType.DOOR_OPEN, "1");
     }
 }

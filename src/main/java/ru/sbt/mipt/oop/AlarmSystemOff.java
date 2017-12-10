@@ -1,22 +1,22 @@
 package ru.sbt.mipt.oop;
 
-public class AlarmSystemStateAlarm implements AlarmSystem {
+public class AlarmSystemOff implements AlarmSystem {
     private final AlarmSystemState alarmSystemState;
     private int password;
 
-    public AlarmSystemStateAlarm(AlarmSystemState system, int password) {
+    public AlarmSystemOff(AlarmSystemState system, int password) {
         alarmSystemState =system;
         this.password = password;
     }
 
     @Override
     public AlarmSystemStateEnum getState() {
-        return AlarmSystemStateEnum.ALARM;
+        return AlarmSystemStateEnum.OFF;
     }
 
     @Override
     public void turnOn() {
-        return;
+        alarmSystemState.setAlarmSystemState(new AlarmSystemOn(alarmSystemState, password));
     }
 
     @Override
