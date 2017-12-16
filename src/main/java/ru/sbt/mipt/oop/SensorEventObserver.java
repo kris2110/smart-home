@@ -25,6 +25,13 @@ public class SensorEventObserver {
         }
     }
 
+    public void onEvent(SensorEvent event) {
+        System.out.println("Got event: " + event.getType());
+        for (EventHandler handler: eventHandlers) {
+            handler.handle(smartHome, event);
+        }
+    }
+
     public void addHandler(EventHandler eventHandler){
         eventHandlers.add(eventHandler);
     }
